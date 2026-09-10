@@ -25,32 +25,32 @@ app.use(morgan("dev"));
 const server = http.createServer(app);
 app.use(
   "/api/auth",
-  proxy(process.env.AUTH_SERVICE || "http://54.160.107.234:8001"),
+  proxy(process.env.AUTH_SERVICE || "http://100.48.184.36:8001"),
 );
 app.use(
   "/api/project",
   protect,
-  proxyWithHeader(process.env.PROJECT_SERVICE || "http://54.160.107.234:8002"),
+  proxyWithHeader(process.env.PROJECT_SERVICE || "http://100.48.184.36:8002"),
 );
 app.use(
   "/api/file",
   protect,
-  proxyWithHeader(process.env.FILE_SERVICE || "http://54.160.107.234:8003"),
+  proxyWithHeader(process.env.FILE_SERVICE || "http://100.48.184.36:8003"),
 );
 app.use(
   "/api/ai",
   protect,
-  proxyWithHeader(process.env.AI_SERVICE || "http://54.160.107.234:8004"),
+  proxyWithHeader(process.env.AI_SERVICE || "http://100.48.184.36:8004"),
 );
 app.use(
   "/api/terminal",
   protect,
-  proxy(process.env.TERMINAL_SERVICE || "http://54.160.107.234:8005"),
+  proxy(process.env.TERMINAL_SERVICE || "http://100.48.184.36:8005"),
 );
 app.use(
   "/api/payment",
   protect,
-  proxyWithHeader(process.env.PAYMENT_SERVICE || "http://54.160.107.234:8006"),
+  proxyWithHeader(process.env.PAYMENT_SERVICE || "http://100.48.184.36:8006"),
 );
 app.get("/api/me", protect, getCurrentUser);
 
@@ -59,20 +59,20 @@ app.get("/", (req, res) => {
 });
 
 const socketProxy = httpProxy.createProxyServer({
-  target: process.env.TERMINAL_SERVICE || "http://54.160.107.234:8005",
+  target: process.env.TERMINAL_SERVICE || "http://100.48.184.36:8005",
   ws: true,
 });
 
 app.use("/socket.io", (req, res) => {
   socketProxy.web(req, res, {
-    target: process.env.TERMINAL_SERVICE || "http://54.160.107.234:8005",
+    target: process.env.TERMINAL_SERVICE || "http://100.48.184.36:8005",
   });
 });
 
 server.on("upgrade", (req, socket, head) => {
   if (req.url.startsWith("/socket.io")) {
     socketProxy.ws(req, socket, head, {
-      target: process.env.TERMINAL_SERVICE || "http://54.160.107.234:8005",
+      target: process.env.TERMINAL_SERVICE || "http://100.48.184.36:8005",
     });
   }
 });
